@@ -1,0 +1,33 @@
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ListView?>
+
+<VBox fx:controller="Client.Controller"
+      xmlns:fx="http://javafx.com/fxml" alignment="center">
+    <HBox fx:id="authorizationPanel">
+        <TextField fx:id="loginField" HBox.hgrow="ALWAYS" minHeight="50" promptText="Логин"/>
+        <PasswordField fx:id="password" onAction="#tryAuthorization" HBox.hgrow="ALWAYS" minHeight="50"
+                       promptText="Пароль"/>
+        <Button onAction="#tryAuthorization" minHeight="50" minWidth="70" text="Вход"/>
+    </HBox>
+
+    <HBox VBox.vgrow="ALWAYS">
+        <TextArea fx:id="chat" editable="false"/>
+        <ListView fx:id="clientList" onMouseClicked="#listSendPrivate" managed="false" visible="false" minWidth="100"/>
+    </HBox>
+
+    <HBox fx:id="messagePanel" visible="false" managed="false">
+        <TextField fx:id="message" onAction="#sendMessage" HBox.hgrow="ALWAYS" minHeight="50"
+                   promptText="Введите сообщение..."/>
+        <Button onAction="#sendMessage" minHeight="50" minWidth="100" text="Отправить"/>
+    </HBox>
+
+    <HBox>
+        <Button onAction="#registrationOpen" fx:id="registrationBtn" text="Регистрация" minWidth="400" minHeight="50"/>
+    </HBox>
+
+</VBox>

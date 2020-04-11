@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="Client.RegistrationController">
+
+    <Label text=" Логин: " minHeight="50"></Label>
+    <TextField fx:id="loginField" minWidth="400" minHeight="50"/>
+
+    <Label text=" Пароль: " minHeight="50"></Label>
+    <PasswordField fx:id="passwordField1" minWidth="400" minHeight="50"/>
+    <Label text=" Повторите ваш пароль: " minHeight="50"></Label>
+    <PasswordField fx:id="passwordField2" minWidth="400" minHeight="50"/>
+
+    <Label text=" Никнейм: " minHeight="50"></Label>
+    <TextField fx:id="nicknameField" minWidth="400" minHeight="50"/>
+
+    <AnchorPane VBox.vgrow="ALWAYS">
+        <Button AnchorPane.bottomAnchor="0" onAction="#applyReg" fx:id="applyBtn" minWidth="400" minHeight="50" text="ЗАРЕГИСТРИРОВАТЬСЯ"/>
+    </AnchorPane>
+</VBox>
