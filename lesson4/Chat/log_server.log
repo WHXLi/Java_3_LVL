@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE log SYSTEM "logger.dtd">
+<log>
+<record>
+  <date>2020-04-16T21:17:37</date>
+  <millis>1587061057611</millis>
+  <sequence>0</sequence>
+  <logger>Server.Server</logger>
+  <level>INFO</level>
+  <class>Server.Server</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Сервер запущен, ожидание подключения...</message>
+</record>
+<record>
+  <date>2020-04-16T21:17:44</date>
+  <millis>1587061064728</millis>
+  <sequence>1</sequence>
+  <logger>Server.Server</logger>
+  <level>INFO</level>
+  <class>Server.Server</class>
+  <method>&lt;init&gt;</method>
+  <thread>1</thread>
+  <message>Клиент подключен: /127.0.0.1:7777</message>
+</record>
+<record>
+  <date>2020-04-16T21:17:44</date>
+  <millis>1587061064731</millis>
+  <sequence>2</sequence>
+  <logger>Server.Server</logger>
+  <level>INFO</level>
+  <class>Server.ClientHandler</class>
+  <method>lambda$new$0</method>
+  <thread>13</thread>
+  <message>Клиент Алина авторизовался</message>
+</record>
+<record>
+  <date>2020-04-16T21:17:51</date>
+  <millis>1587061071788</millis>
+  <sequence>3</sequence>
+  <logger>Server.Server</logger>
+  <level>INFO</level>
+  <class>Server.ClientHandler</class>
+  <method>lambda$new$0</method>
+  <thread>13</thread>
+  <message>Пользователь отправил сообщение: Привет</message>
+</record>
+<record>
+  <date>2020-04-16T21:18:58</date>
+  <millis>1587061138672</millis>
+  <sequence>4</sequence>
+  <logger>Server.Server</logger>
+  <level>INFO</level>
+  <class>Server.ClientHandler</class>
+  <method>lambda$new$0</method>
+  <thread>13</thread>
+  <message>Алина отключен</message>
+</record>
