@@ -7,6 +7,10 @@ import java.util.Vector;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Server {
 
@@ -15,17 +19,19 @@ public class Server {
 
     //ССЫЛКА НА ИНТЕРФЕЙС АВТОРИЗАЦИИ
     private Authorization authorization;
+    public Authorization getAuthorization() {
+        return authorization;
+    }
 
+    //ЭКС. СЕРВИС
     private ExecutorService service;
-
     public ExecutorService getService() {
         return service;
     }
 
-    //ГЕТТЕР
-    public Authorization getAuthorization() {
-        return authorization;
-    }
+    //ЛОГГИРОВАНИЕ
+    public static final Logger logger = Logger.getLogger(Server.class.getName());
+    public static Handler handler;
 
     public Server() {
         //СОКЕТЫ
@@ -38,22 +44,32 @@ public class Server {
         //КЭШИРОВАННЫЙ ЭКЗ.СЕРВИС
         service = Executors.newCachedThreadPool();
 
+        //ЛОГГИРОВАНИЕ
+        try {
+            handler = new FileHandler("log_server.log");
+            logger.setUseParentHandlers(false);
+            logger.addHandler(handler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         //ИНИЦИАЛИЗАЦИЯ СПИСКА КЛИЕНТОВ И АВТОРИЗАЦИИ
         clients = new Vector<>();
         if (!SQLHandler.connect()){
-            throw  new RuntimeException("Не удалось подключиться к БД");
+            logger.log(Level.SEVERE, "Не удалось подключиться к БД");
+            throw  new RuntimeException();
         }
         authorization = new DBAuthorization();
 
         try {
             //СОЗДАЕМ СЕРВЕР
             server = new ServerSocket(PORT);
-            System.out.println("Сервер запущен, ожидание подключения...");
+            logger.log(Level.INFO, "Сервер запущен, ожидание подключения...");
 
             while (true) {
                 //ОЖИДАЕМ ПОДКЛЮЧЕНИЯ КЛИЕНТА
                 client = server.accept();
-                System.out.println("Клиент подключен: " + client.getLocalSocketAddress());
+                logger.log(Level.INFO, "Клиент подключен: " + client.getLocalSocketAddress());
 
                 //СОЗДАЕМ ЭКЗЕМПЛЯР КЛАССА ОТВЕЧАЮЩЕГО ЗА РАБОТУ С ПОДКЛЮЧЕННЫМ КЛИЕНТОМ
                 new ClientHandler(client, this);

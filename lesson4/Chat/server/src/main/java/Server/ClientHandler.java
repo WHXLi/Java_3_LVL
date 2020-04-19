@@ -7,6 +7,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.logging.Level;
 
 public class ClientHandler {
 
@@ -21,11 +22,9 @@ public class ClientHandler {
     //ПЕРЕМЕННЫЕ ДЛЯ ХРАНЕНИЯ НИКНЕЙМА И ЛОГИНА
     private String nickname;
     private String login;
-
     public String getNickname() {
         return nickname;
     }
-
     public String getLogin() {
         return login;
     }
@@ -50,7 +49,8 @@ public class ClientHandler {
 
                         //ВОЗМОЖНОСТЬ ВЫХОДА ДЛЯ КЛИЕНТА
                         if (authorization.equals("/end")) {
-                            throw new RuntimeException("Клиент отключен");
+                            server.logger.log(Level.SEVERE, "Клиент отключен");
+                            throw new RuntimeException();
                         }
 
                         //РЕГИСТРАЦИЯ
@@ -77,15 +77,15 @@ public class ClientHandler {
                                     sendMessage("/authorizationOK " + newNickname);
                                     nickname = newNickname;
                                     server.subscribeAdd(this);
-                                    System.out.println("Клиент " + nickname + " авторизовался");
+                                    server.logger.log(Level.INFO, "Клиент " + nickname + " авторизовался");
                                     break;
                                 } else {
                                     sendMessage("Пользователь в сети");
-                                    System.out.println("Ошибка входа");
+                                    server.logger.log(Level.INFO, client.getLocalSocketAddress() + " ошибка входа, пользователь в сети");
                                 }
                             } else {
                                 sendMessage("Неверный логин / пароль" + "\n");
-                                System.out.println("Ошибка входа");
+                                server.logger.log(Level.INFO, client.getLocalSocketAddress() + " ошибка входа, неверный логин/пароль");
                             }
                         }
                     }
@@ -103,7 +103,7 @@ public class ClientHandler {
                                 out.writeUTF("/end");
                                 break;
                             }
-                            //ВОЗМОЖНОСТЬ ОТПРАВКИ ПРИВАТНОГО СООБЩЕНИЯ (НЕ РАБОТАЕТ)
+                            //ВОЗМОЖНОСТЬ ОТПРАВКИ ПРИВАТНОГО СООБЩЕНИЯ
                             if (message.startsWith("/w ")) {
                                 //ОГРАНИЧИВАЕМ СПЛИТ ДО 3 ПРОБЕЛОВ
                                 String[] token = message.split(" ", 3);
@@ -122,6 +122,8 @@ public class ClientHandler {
                                 if (server.getAuthorization().changeNickname(this.nickname,token[1])){
                                     sendMessage("/yourNickIs " + token[1]);
                                     sendMessage("Ваш ник изменен на " + token[1]);
+                                    server.logger.log(Level.INFO, client.getLocalSocketAddress() + " " +
+                                            nickname + " изменил никнейм на " + token[1]);
                                     this.nickname = token[1];
                                     server.clientListMessage();
                                 }else sendMessage("Не удалось изменить ник. " + token[1] + " уже существует");
@@ -129,10 +131,11 @@ public class ClientHandler {
                         } else {
                             //ВЫВОДИМ СООБЩЕНИЕ ПОЛЬЗОВАТЕЛЯ В ЧАТ
                             server.broadcastMessage(nickname, message);
+                            server.logger.log(Level.INFO, "Пользователь " + nickname + " отправил сообщение: " + message);
                         }
                     }
                 }catch (SocketTimeoutException e){
-                    System.out.println("Клиент бездействовал продолжительное время, отключение");
+                    server.logger.log(Level.INFO, "Клиент бездействовал продолжительное время, отключение");
                     sendMessage("/end");
                 } catch (RuntimeException e) {
                     System.out.println(e.getMessage());
@@ -141,7 +144,7 @@ public class ClientHandler {
                 } finally {
                     //В СЛУЧАЕ ВЫХОДА КЛИЕНТА, ОН УДАЛЯЕТСЯ ИЗ СПИСКА ОБРАБАТЫВАЕМЫХ КЛИЕНТОВ
                     server.subscribeDel(this);
-                    System.out.println(nickname + " отключен");
+                    server.logger.log(Level.INFO, nickname + " отключен");
                     try {
                         client.close();
                     } catch (IOException e) {
